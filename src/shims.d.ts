@@ -5,7 +5,7 @@ declare module '*.vue' {
   export default component;
 }
 
-declare module '*.glsl' {
+declare module '*.glsl?raw' {
   export default string;
 }
 

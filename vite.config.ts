@@ -54,7 +54,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, '/src'),
-      styles: resolve(__dirname, '/src/styles/'),
+      '@objects': resolve(__dirname, '/src/objects/'),
     },
   },
   base: './',

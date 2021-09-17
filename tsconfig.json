@@ -17,8 +17,10 @@
     "jsx": "react",
     "rootDir": ".",
     "baseUrl": ".",
+    "types": ["vite/client", "node", "vite-plugin-pages/client"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@objects/*": ["src/objects/*"]
     }
   },
   "include": ["src", "auto-imports.d.ts", "components.d.ts"],

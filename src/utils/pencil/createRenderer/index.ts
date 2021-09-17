@@ -5,8 +5,8 @@ import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass';
 import {FXAAShader} from 'three/examples/jsm/shaders/FXAAShader';
 // import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import {UnrealBloomPass} from './UnrealBloomPass';
-import vertexShader from './shader/vertex.glsl';
-import fragmentShader from './shader/fragment.glsl';
+import vertexShader from './shader/vertex.glsl?raw';
+import fragmentShader from './shader/fragment.glsl?raw';
 import createEdgePass from './edge';
 
 export interface BloomParams {

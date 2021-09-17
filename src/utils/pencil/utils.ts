@@ -3,10 +3,7 @@
 import * as THREE from 'three';
 
 export const getImage = (...urls: string[]) => {
-  if (urls.length > 1) {
-    return urls.map((url) => require(`@/assets/images/${url}`));
-  }
-  return require(`@/assets/images/${urls[0]}`);
+  return new URL(`/src/assets/images/${urls[0]}`, import.meta.url).href;
 };
 export const getTexture = (url: string) => {
   return new THREE.TextureLoader().load(getImage(url));

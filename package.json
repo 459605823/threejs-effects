@@ -20,6 +20,7 @@
     "dat.gui": "^0.7.7",
     "deepmerge": "^4.2.2",
     "element-plus": "^1.0.2-beta.44",
+    "events": "^3.3.0",
     "maptalks": "^1.0.0-alpha.26",
     "maptalks.three": "^0.16.1",
     "stats.js": "^0.17.0",

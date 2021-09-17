@@ -2458,6 +2458,11 @@ etag@^1.8.1:
   resolved "https://registry.npm.taobao.org/etag/download/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+events@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.nlark.com/events/download/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
+  integrity sha1-Mala0Kkk4tLEGagTrrLE6HjqdAA=
+
 execall@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/execall/download/execall-2.0.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fexecall%2Fdownload%2Fexecall-2.0.0.tgz#16a06b5fe5099df7d00be5d9c06eecded1663b45"

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass';
 import {colorVector} from '@/utils/color';
-import vertexShader from './vertex.glsl';
-import fragmentShader from './fragment.glsl';
+import vertexShader from './vertex.glsl?raw';
+import fragmentShader from './fragment.glsl?raw';
 
 interface Options {
   width: number;
