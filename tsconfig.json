@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
     "module": "esnext",
     "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "types": ["vite/client", "node", "vite-plugin-pages/client"],
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-    },
-    "plugins": [{"name": "@vuedx/typescript-plugin-vue"}]
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "auto-imports.d.ts", "components.d.ts"],
   "exclude": ["node_modules", "dist"]
