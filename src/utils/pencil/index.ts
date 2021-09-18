@@ -427,7 +427,7 @@ export default class Pencil {
           this.control.update();
         }
       } else {
-        // plugin.render();
+        plugin.render();
       }
       this.css3DRenderer?.render(scene, camera);
 

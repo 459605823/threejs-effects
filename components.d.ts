@@ -4,13 +4,10 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    '// Read more': https://github.com/vuejs/vue-next/pull/3399
     Building: typeof import('./src/components/Building/index.vue')['default']
-    BuildingMaptalks: typeof import('./src/components/Building-maptalks/index.vue')['default']
-    Coordinate: typeof import('./src/components/pageComponents/Coordinate.vue')['default']
-    ElSwitch: typeof import('element-plus/es/el-switch')['default']
+    Flyline: typeof import('./src/components/Flyline/index.vue')['default']
     ShieldCover: typeof import('./src/components/ShieldCover/index.vue')['default']
-    SvgIcon: typeof import('./src/components/baseComponents/SvgIcon.vue')['default']
+    Terrain: typeof import('./src/components/Terrain/index.vue')['default']
   }
 }
 

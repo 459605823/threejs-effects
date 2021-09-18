@@ -412,6 +412,23 @@
   resolved "https://registry.nlark.com/@popperjs/core/download/@popperjs/core-2.10.1.tgz?cache=0&sync_timestamp=1630646793367&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40popperjs%2Fcore%2Fdownload%2F%40popperjs%2Fcore-2.10.1.tgz#728ecd95ab207aab8a9a4e421f0422db329232be"
   integrity sha1-co7NlasgequKmk5CHwQi2zKSMr4=
 
+"@rollup/plugin-typescript@^8.2.5":
+  version "8.2.5"
+  resolved "https://registry.nlark.com/@rollup/plugin-typescript/download/@rollup/plugin-typescript-8.2.5.tgz#e0319761b2b5105615e5a0c371ae05bc2984b7de"
+  integrity sha1-4DGXYbK1EFYV5aDDca4FvCmEt94=
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+    resolve "^1.17.0"
+
+"@rollup/pluginutils@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.nlark.com/@rollup/pluginutils/download/@rollup/pluginutils-3.1.0.tgz#706b4524ee6dc8b103b3c995533e5ad680c02b9b"
+  integrity sha1-cGtFJO5tyLEDs8mVUz5a1oDAK5s=
+  dependencies:
+    "@types/estree" "0.0.39"
+    estree-walker "^1.0.1"
+    picomatch "^2.2.2"
+
 "@rollup/pluginutils@^4.1.0", "@rollup/pluginutils@^4.1.1":
   version "4.1.1"
   resolved "https://registry.nlark.com/@rollup/pluginutils/download/@rollup/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
@@ -520,7 +537,7 @@
 
 "@types/d3-geo@^3.0.2":
   version "3.0.2"
-  resolved "https://registry.nlark.com/@types/d3-geo/download/@types/d3-geo-3.0.2.tgz#e7ec5f484c159b2c404c42d260e6d99d99f45d9a"
+  resolved "https://registry.nlark.com/@types/d3-geo/download/@types/d3-geo-3.0.2.tgz?cache=0&sync_timestamp=1629707130128&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fd3-geo%2Fdownload%2F%40types%2Fd3-geo-3.0.2.tgz#e7ec5f484c159b2c404c42d260e6d99d99f45d9a"
   integrity sha1-5+xfSEwVmyxATELSYObZnZn0XZo=
   dependencies:
     "@types/geojson" "*"
@@ -542,6 +559,11 @@
   resolved "https://registry.nlark.com/@types/dat.gui/download/@types/dat.gui-0.7.7.tgz#2125aedfaa190364c5a50b0447858a7e159aea2e"
   integrity sha1-ISWu36oZA2TFpQsER4WKfhWa6i4=
 
+"@types/estree@0.0.39":
+  version "0.0.39"
+  resolved "https://registry.nlark.com/@types/estree/download/@types/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
+  integrity sha1-4Xfmme4bjCLSMXTKqnQiZEOJUJ8=
+
 "@types/estree@^0.0.48":
   version "0.0.48"
   resolved "https://registry.nlark.com/@types/estree/download/@types/estree-0.0.48.tgz#18dc8091b285df90db2f25aa7d906cfc394b7f74"
@@ -549,7 +571,7 @@
 
 "@types/geojson@*":
   version "7946.0.8"
-  resolved "https://registry.nlark.com/@types/geojson/download/@types/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
+  resolved "https://registry.nlark.com/@types/geojson/download/@types/geojson-7946.0.8.tgz?cache=0&sync_timestamp=1629708053820&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fgeojson%2Fdownload%2F%40types%2Fgeojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
   integrity sha1-MHRK/bOF4pReIvOwM/iX92sfEso=
 
 "@types/json-schema@^7.0.7":
@@ -2442,6 +2464,11 @@ estraverse@^5.1.0, estraverse@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npm.taobao.org/estraverse/download/estraverse-5.2.0.tgz#307df42547e6cc7324d3cf03c155d5cdb8c53880"
   integrity sha1-MH30JUfmzHMk088DwVXVzbjFOIA=
+
+estree-walker@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/estree-walker/download/estree-walker-1.0.1.tgz#31bc5d612c96b704106b477e6dd5d8aa138cb700"
+  integrity sha1-MbxdYSyWtwQQa0d+bdXYqhOMtwA=
 
 estree-walker@^2.0.1, estree-walker@^2.0.2:
   version "2.0.2"
@@ -4962,7 +4989,7 @@ resolve-url@^0.2.1:
   resolved "https://registry.nlark.com/resolve-url/download/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.10.0, resolve@^1.20.0:
+resolve@^1.10.0, resolve@^1.17.0, resolve@^1.20.0:
   version "1.20.0"
   resolved "https://registry.nlark.com/resolve/download/resolve-1.20.0.tgz?cache=0&sync_timestamp=1618846903792&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fresolve%2Fdownload%2Fresolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
   integrity sha1-YpoBP7P3B1XW8LeTXMHCxTeLGXU=
@@ -5675,7 +5702,7 @@ three.terrain.js@^2.0.0:
   resolved "https://registry.nlark.com/three.terrain.js/download/three.terrain.js-2.0.0.tgz#a9508bbebccb194e828de57fdaad30a312936956"
   integrity sha1-qVCLvrzLGU6CjeV/2q0woxKTaVY=
 
-three@^0.122.0:
+three@0.122.0:
   version "0.122.0"
   resolved "https://registry.nlark.com/three/download/three-0.122.0.tgz#bd9ed8a8820074856e8ba7b63fe0a65176e01aeb"
   integrity sha1-vZ7YqIIAdIVui6e2P+CmUXbgGus=

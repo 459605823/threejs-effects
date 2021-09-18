@@ -26,7 +26,7 @@ export default class ShieldCover extends BaseObject {
 
   create() {
     this.createGroup();
-    const {scale} = this.options;
+    const {scale, position} = this.options;
     const time = {value: 1};
     const offset = {type: 'f', value: 0.0};
     const glowColor = {type: 'c', value: new THREE.Color(0x4b88c5)};
@@ -60,6 +60,7 @@ export default class ShieldCover extends BaseObject {
     const Shield = new THREE.Mesh(geometry, material);
     Shield.scale.multiply(scale);
     this.object3d.add(Shield);
+    this.object3d.position.copy(position);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.x = 1;

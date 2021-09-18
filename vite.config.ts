@@ -7,9 +7,10 @@ import Components from 'unplugin-vue-components/vite';
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers';
 import Pages from 'vite-plugin-pages';
 import viteSvgIcons from 'vite-plugin-svg-icons';
+import typescript from '@rollup/plugin-typescript';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({command, mode}) => ({
   plugins: [
     vue(),
     styleImport({
@@ -63,8 +64,34 @@ export default defineConfig({
     port: 3000,
     cors: true,
   },
+  publicDir: command === 'build' ? false : 'public',
+  build: {
+    outDir: 'lib',
+    lib: {
+      entry: resolve(__dirname, 'src/objects'),
+      name: 'threejs-effects',
+      fileName: (format) => `threejs-effects.${format}.js`,
+    },
+    rollupOptions: {
+      // 确保外部化处理那些你不想打包进库的依赖
+      external: ['vue', 'vue-router', 'three', 'maptalks', 'element-plus'],
+      output: {
+        // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
+        globals: {
+          vue: 'Vue',
+        },
+      },
+      plugins: [
+        typescript({
+          include: ['objects/**/*', 'src/shims.d.ts'],
+          declaration: true,
+          declarationDir: resolve(__dirname, 'lib'),
+        }),
+      ],
+    },
+  },
   optimizeDeps: {
     include: ['vue', 'vue-router', '@vueuse/core'],
     exclude: ['vue-demi'],
   },
-});
+}));

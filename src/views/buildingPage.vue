@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen">
-    <Building-maptalks />
+    <Building />
   </div>
 </template>
 <script lang="ts">

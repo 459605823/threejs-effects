@@ -1,66 +1,100 @@
 <template>
-  <div ref="container" class="w-full h-full bg-black"></div>
+  <div
+    ref="container"
+    class="w-full h-full bg-black"
+    :style="{visibility: show ? 'visible' : 'hidden'}"
+  ></div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import Building from '@objects/Building';
-import Terrain from '@objects/Terrain';
-import * as THREE from 'three';
-import {getMaterial2, getLineMaterial} from '@objects/Building/material';
+import Building from '@objects/Building-maptalks';
+import Road from '@objects/Road';
+import spriteLine from '@objects/lines/spriteLine';
+import Plugin from '@/utils/pencil/map';
 import Pencil from '@/utils/pencil/index';
-import AreaScale from '@/utils/AreaScale';
+
+const test = (type: string, json: any) => {
+  if (type === 'build') {
+    return json.map((item: any) => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: item.polygon,
+        },
+        properties: {
+          Height: item.height,
+        },
+      };
+    });
+  }
+  if (type === 'road') {
+    return json.map((item: any) => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: item.path,
+        },
+        properties: {
+          RoadWidth: '2',
+        },
+      };
+    });
+  }
+};
 
 export default defineComponent({
   name: 'Building',
   setup() {
     const container = ref<HTMLDivElement>();
-    const area = [119.993, 35.9975, 120.6514, 36.2859] as [
-      number,
-      number,
-      number,
-      number
-    ];
-    const polygonCenter = [120.3224, 36.1415];
-    const init = async (pencil: Pencil) => {
-      const areaScale = AreaScale(area, [3840, 2080]);
-      const center = areaScale.getPoint(polygonCenter[0], polygonCenter[1]);
-      const terrain = await pencil.draw('terrain');
-      const material = getMaterial2(
-        container.value?.clientWidth as number,
-        container.value?.clientHeight as number
-      );
-      await pencil.draw('building', {
-        url: '/geojson/qingdao-polygon.json',
-        material,
-        position: [center.x, 0, center.y],
-        lineMaterial: getLineMaterial(),
-        areaScale,
-        terrain,
-      });
-      pencil.control?.target.set(center.x, 0, center.y);
-      pencil.camera?.position.set(0, 1500, 0);
-      pencil.start();
-    };
-    onMounted(() => {
-      const pencil = new Pencil({
+    const show = ref(false);
+    onMounted(async () => {
+      const plugin = new Plugin({
         container: container.value,
-        control: true,
-        stats: true,
-        renderer: {
-          edge: false,
-          bloom: false,
+        bloom: true,
+        map: {
+          center: [-74.00790992756748, 40.71167813139547],
+          zoom: 30,
+          pitch: 45,
+          bearing: 0,
+          draggable: true,
+          dragPan: true,
+          scrollWheelZoom: true,
         },
-        scene: {
-          background: new THREE.Color('#999999'),
-        },
+      });
+      const pencil = new Pencil({
+        container: '.box',
+        plugin,
       });
       pencil.registerElement('building', Building);
-      pencil.registerElement('terrain', Terrain);
-      init(pencil);
+      pencil.registerElement('road', Road);
+      pencil.registerElement('spriteLine', spriteLine);
+      await pencil.draw('building', {
+        url: '/geojson/buildings.json',
+        fn: test.bind(null, 'build'),
+      });
+      await pencil.draw('road', {
+        url: '/geojson/road.json',
+        fn: test.bind(null, 'road'),
+      });
+      pencil.start();
+      show.value = true;
+      const {map} = plugin;
+      map.animateTo(
+        {
+          zoom: 15,
+        },
+        {
+          duration: 2000,
+          easing: 'out',
+        }
+      );
     });
     return {
       container,
+      show,
     };
   },
 });

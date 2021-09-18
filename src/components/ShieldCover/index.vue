@@ -5,7 +5,9 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import ShieldCover from '@objects/ShieldCover';
+import ElectricShield from '@objects/ElectricShield';
 import Grid from '@objects/Grid';
+import * as THREE from 'three';
 import Pencil from '@/utils/pencil/index';
 
 export default defineComponent({
@@ -22,12 +24,19 @@ export default defineComponent({
         },
       });
       if (pencil.camera) {
-        pencil.camera.position.y = 3;
-        pencil.camera.position.z = 10;
+        pencil.camera.position.y = 10;
+        pencil.camera.position.z = 20;
       }
       pencil.registerElement('shieldCover', ShieldCover);
+      pencil.registerElement('electricShield', ElectricShield);
       pencil.registerElement('grid', Grid);
-      pencil.draw('shieldCover');
+      pencil.draw('shieldCover', {
+        position: new THREE.Vector3(-5, 0, 0),
+      });
+      pencil.draw('electricShield', {
+        radius: 5,
+        position: new THREE.Vector3(5, 0, 0),
+      });
       pencil.draw('grid', {
         size: 150,
         divisions: 50,

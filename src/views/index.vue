@@ -15,7 +15,15 @@ import {defineComponent} from 'vue';
 
 export default defineComponent({
   setup() {
-    const pages = ['shieldCoverPage', 'buildingPage'];
+    const pages = [
+      'shieldCoverPage',
+      'terrainPage',
+      'buildingPage',
+      'flyLinePage',
+      'ringEffectPage',
+      'haloEffectPage',
+      'oceanPage',
+    ];
     return {
       pages,
     };
