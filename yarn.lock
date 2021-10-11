@@ -2842,6 +2842,11 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   resolved "https://registry.nlark.com/graceful-fs/download/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
   integrity sha1-5BK40z9eAGWTy9PO5t+fLOu+gCo=
 
+gsap@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.npmmirror.com/gsap/download/gsap-3.8.0.tgz?cache=0&sync_timestamp=1632902708570&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fgsap%2Fdownload%2Fgsap-3.8.0.tgz#a404dd6ebbaabc92605539aea9d98e3098688064"
+  integrity sha1-pATdbruqvJJgVTmuqdmOMJhogGQ=
+
 hard-rejection@^2.1.0:
   version "2.1.0"
   resolved "https://registry.nlark.com/hard-rejection/download/hard-rejection-2.1.0.tgz#1c6eda5c1685c63942766d79bb40ae773cecd883"
@@ -5517,10 +5522,10 @@ three.terrain.js@^2.0.0:
   resolved "https://registry.nlark.com/three.terrain.js/download/three.terrain.js-2.0.0.tgz#a9508bbebccb194e828de57fdaad30a312936956"
   integrity sha1-qVCLvrzLGU6CjeV/2q0woxKTaVY=
 
-three@^0.122.0:
-  version "0.122.0"
-  resolved "https://registry.npmmirror.com/three/download/three-0.122.0.tgz?cache=0&sync_timestamp=1633366637640&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fthree%2Fdownload%2Fthree-0.122.0.tgz#bd9ed8a8820074856e8ba7b63fe0a65176e01aeb"
-  integrity sha1-vZ7YqIIAdIVui6e2P+CmUXbgGus=
+three@0.123.0:
+  version "0.123.0"
+  resolved "https://registry.npmmirror.com/three/download/three-0.123.0.tgz#3bb6d8f908a432eb7cd450f7eab6dd40fde53085"
+  integrity sha1-O7bY+QikMut81FD36rbdQP3lMIU=
 
 through@^2.3.6:
   version "2.3.8"

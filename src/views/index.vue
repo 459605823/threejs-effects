@@ -23,6 +23,7 @@ export default defineComponent({
       'ringEffectPage',
       'haloEffectPage',
       'oceanPage',
+      'particlePage',
     ];
     return {
       pages,
