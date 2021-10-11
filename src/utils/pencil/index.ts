@@ -115,7 +115,7 @@ export default class Pencil {
     control: false,
     container: document.body,
     renderer: {
-      // antialias,
+      antialias: false,
       edge: false,
       bloom: false,
       bloomParams: {

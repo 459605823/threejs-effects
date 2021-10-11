@@ -102,5 +102,7 @@ module.exports = {
     'max-classes-per-file': 0,
     'no-bitwise': 0,
     'no-plusplus': 0,
+    'no-inner-declarations': 0,
+    'no-shadow': 0,
   },
 };

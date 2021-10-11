@@ -42,6 +42,5 @@ declare global {
   const onRenderTriggered: typeof import('vue')['onRenderTriggered']
   const useRouter: typeof import('vue-router')['useRouter']
   const useRoute: typeof import('vue-router')['useRoute']
-  const useMouse: typeof import('@vueuse/core')['useMouse']
 }
 export {}

@@ -1,10 +1,8 @@
 import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
 import {resolve} from 'path';
-import styleImport from 'vite-plugin-style-import';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
-import {ElementPlusResolver} from 'unplugin-vue-components/resolvers';
 import Pages from 'vite-plugin-pages';
 import viteSvgIcons from 'vite-plugin-svg-icons';
 import typescript from '@rollup/plugin-typescript';
@@ -13,24 +11,8 @@ import typescript from '@rollup/plugin-typescript';
 export default defineConfig(({command, mode}) => ({
   plugins: [
     vue(),
-    styleImport({
-      libs: [
-        {
-          libraryName: 'element-plus',
-          esModule: true,
-          ensureStyleFile: true,
-          resolveStyle: (name) => {
-            name = name.slice(3);
-            return `element-plus/packages/theme-chalk/src/${name}.scss`;
-          },
-          resolveComponent: (name) => {
-            return `element-plus/lib/${name}`;
-          },
-        },
-      ],
-    }),
     AutoImport({
-      imports: ['vue', 'vue-router', {'@vueuse/core': ['useMouse']}],
+      imports: ['vue', 'vue-router'],
       dts: true,
     }),
     Components({
@@ -38,7 +20,6 @@ export default defineConfig(({command, mode}) => ({
       extensions: ['vue'],
       exclude: [/node_modules/, /\.git/],
       include: [/\.vue$/, /\.vue\?vue/],
-      resolvers: [ElementPlusResolver()],
       dts: true,
     }),
     Pages({
@@ -74,12 +55,14 @@ export default defineConfig(({command, mode}) => ({
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖
-      external: ['vue', 'vue-router', 'three', 'maptalks', 'element-plus'],
+      external: ['vue', 'vue-router', 'three', 'maptalks'],
       output: {
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           vue: 'Vue',
+          three: 'THREE',
         },
+        exports: 'named',
       },
       plugins: [
         typescript({
@@ -91,7 +74,7 @@ export default defineConfig(({command, mode}) => ({
     },
   },
   optimizeDeps: {
-    include: ['vue', 'vue-router', '@vueuse/core'],
+    include: ['vue', 'vue-router'],
     exclude: ['vue-demi'],
   },
 }));
