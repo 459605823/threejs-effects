@@ -24,6 +24,7 @@ export default defineComponent({
       'haloEffectPage',
       'oceanPage',
       'particlePage',
+      'earthPage',
     ];
     return {
       pages,

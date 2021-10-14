@@ -104,5 +104,6 @@ module.exports = {
     'no-plusplus': 0,
     'no-inner-declarations': 0,
     'no-shadow': 0,
+    'no-restricted-syntax': 0,
   },
 };

@@ -534,14 +534,14 @@
 
 "@types/d3-scale@^4.0.1":
   version "4.0.1"
-  resolved "https://registry.nlark.com/@types/d3-scale/download/@types/d3-scale-4.0.1.tgz#fbe8238e2eff27af577d2b7d0b933ae50a546970"
+  resolved "https://registry.nlark.com/@types/d3-scale/download/@types/d3-scale-4.0.1.tgz?cache=0&sync_timestamp=1629707132484&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fd3-scale%2Fdownload%2F%40types%2Fd3-scale-4.0.1.tgz#fbe8238e2eff27af577d2b7d0b933ae50a546970"
   integrity sha1-++gjji7/J69XfSt9C5M65QpUaXA=
   dependencies:
     "@types/d3-time" "*"
 
 "@types/d3-time@*":
   version "3.0.0"
-  resolved "https://registry.nlark.com/@types/d3-time/download/@types/d3-time-3.0.0.tgz#e1ac0f3e9e195135361fa1a1d62f795d87e6e819"
+  resolved "https://registry.nlark.com/@types/d3-time/download/@types/d3-time-3.0.0.tgz?cache=0&sync_timestamp=1629707134228&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fd3-time%2Fdownload%2F%40types%2Fd3-time-3.0.0.tgz#e1ac0f3e9e195135361fa1a1d62f795d87e6e819"
   integrity sha1-4awPPp4ZUTU2H6Gh1i95XYfm6Bk=
 
 "@types/dat.gui@^0.7.7":
@@ -5524,7 +5524,7 @@ three.terrain.js@^2.0.0:
 
 three@0.123.0:
   version "0.123.0"
-  resolved "https://registry.npmmirror.com/three/download/three-0.123.0.tgz#3bb6d8f908a432eb7cd450f7eab6dd40fde53085"
+  resolved "https://registry.npmmirror.com/three/download/three-0.123.0.tgz?cache=0&sync_timestamp=1633366637640&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fthree%2Fdownload%2Fthree-0.123.0.tgz#3bb6d8f908a432eb7cd450f7eab6dd40fde53085"
   integrity sha1-O7bY+QikMut81FD36rbdQP3lMIU=
 
 through@^2.3.6:
