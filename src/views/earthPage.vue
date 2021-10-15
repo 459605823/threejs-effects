@@ -37,7 +37,9 @@ export default defineComponent({
       }
 
       pencil.registerElement('earth', Earth);
-      pencil.draw('earth');
+      pencil.draw('earth', {
+        container: container.value,
+      });
 
       pencil.start();
     });
@@ -87,8 +89,5 @@ export default defineComponent({
   text-shadow:         /* create a black outline */ -1px -1px 0 #000,
     0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000,
     -1px 1px 0 #000, -1px 0 0 #000;
-}
-#labels > div:hover {
-  color: red;
 }
 </style>

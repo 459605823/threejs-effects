@@ -4,6 +4,7 @@ import TWEEN from '@tweenjs/tween.js';
 import BaseObject from '@/utils/pencil/BaseObject';
 import countryInfos from './country-info.json';
 import {getTexture} from '@/utils/pencil/utils';
+import {GpuPicker} from '@/utils/Picker';
 import manPopulation from './man.asc?raw';
 import womenPopulation from './women.asc?raw';
 
@@ -11,14 +12,15 @@ type ICountryInfo = typeof countryInfos[number] & {
   position: THREE.Vector3;
   area: number;
   elem: HTMLElement;
+  selected: boolean;
 };
 
-type file = ReturnType<Earth['parseData']>;
+type IFile = ReturnType<typeof parseData>;
 
 type IFileInfos = {
   name: string;
   hueRange: [number, number];
-  file: file;
+  file: IFile;
   elem?: HTMLElement;
 };
 
@@ -30,14 +32,14 @@ function mapValues(data: number[][], fn: Function) {
   });
 }
 
-function makeDiffFile(baseFile: file, otherFile: file, compareFn: Function) {
+function makeDiffFile(baseFile: IFile, otherFile: IFile, compareFn: Function) {
   let min: number | undefined;
   let max: number | undefined;
   const baseData = baseFile.data;
   const otherData = otherFile.data;
   const data = mapValues(
     baseData,
-    (base: file, rowNdx: number, colNdx: number) => {
+    (base: IFile, rowNdx: number, colNdx: number) => {
       const other = otherData[rowNdx][colNdx];
       if (base === undefined || other === undefined) {
         return undefined;
@@ -65,6 +67,41 @@ function dataMissingInAnySet(
   }
   return false;
 }
+const tempColor = new THREE.Color();
+
+function get255BasedColor(color: string) {
+  tempColor.set(color);
+  return tempColor.toArray().map((v) => v * 255);
+}
+
+function parseData(text: string) {
+  const data: number[][] = [];
+  const settings: Record<string, any> & {data: number[][]} = {data};
+  let max: number | undefined;
+  let min: number | undefined;
+  // split into lines
+  text.split('\n').forEach((line: any) => {
+    // split the line by whitespace
+    const parts = line.trim().split(/\s+/);
+    if (parts.length === 2) {
+      // only 2 parts, must be a key/value pair
+      settings[parts[0]] = parseFloat(parts[1]);
+    } else if (parts.length > 2) {
+      // more than 2 parts, must be data
+      const values = parts.map((v: any) => {
+        const value = parseFloat(v);
+        if (value === settings.NODATA_value) {
+          return undefined;
+        }
+        max = Math.max(max === undefined ? value : max, value);
+        min = Math.min(min === undefined ? value : min, value);
+        return value;
+      });
+      data.push(values);
+    }
+  });
+  return Object.assign(settings, {min, max});
+}
 
 export default class Earth extends BaseObject {
   countryInfos: ICountryInfo[];
@@ -91,6 +128,22 @@ export default class Earth extends BaseObject {
 
   mesh: THREE.Mesh;
 
+  pickingScene: THREE.Scene;
+
+  pickHelper: GpuPicker;
+
+  palette: Uint8Array;
+
+  paletteTexture: THREE.DataTexture;
+
+  selectedColor: number[];
+
+  unselectedColor: number[];
+
+  oceanColor: number[];
+
+  maxNumCountries: number;
+
   constructor(...args: ConstructorParameters<typeof BaseObject>) {
     super(args[0], {
       ...args[1],
@@ -103,6 +156,72 @@ export default class Earth extends BaseObject {
     this.raycaster = new THREE.Raycaster();
     this.minArea = 10;
     this.maxVisibleDot = -0.2;
+    this.pickHelper = new GpuPicker();
+    this.maxNumCountries = 512;
+  }
+
+  create() {
+    const geometry = new THREE.SphereBufferGeometry(1, 64, 32);
+    const indexTexture = getTexture('Earth/country-indexed.png');
+    indexTexture.minFilter = THREE.NearestFilter;
+    indexTexture.magFilter = THREE.NearestFilter;
+    this.createSphere(geometry, indexTexture);
+    this.createPicking(geometry, indexTexture);
+    this.initBox();
+    this.addLabels();
+    this.setGui();
+    this.initEvents();
+  }
+
+  createSphere(geometry: THREE.BufferGeometry, indexTexture: THREE.Texture) {
+    this.createPalette();
+    const outlineTexture = getTexture('Earth/country-outline.png');
+    const material = new THREE.MeshBasicMaterial({
+      map: outlineTexture,
+    });
+    const {paletteTexture, maxNumCountries} = this;
+    const fragmentShaderReplacements = [
+      {
+        from: '#include <common>',
+        to: `
+          #include <common>
+          uniform sampler2D indexTexture;
+          uniform sampler2D paletteTexture;
+          uniform float paletteTextureWidth;
+        `,
+      },
+      {
+        from: '#include <color_fragment>',
+        to: `
+          #include <color_fragment>
+          {
+            vec4 indexColor = texture2D(indexTexture, vUv);
+            float index = indexColor.r * 255.0 + indexColor.g * 255.0 * 256.0;
+            vec2 paletteUV = vec2((index + 0.5) / paletteTextureWidth, 0.5);
+            vec4 paletteColor = texture2D(paletteTexture, paletteUV);
+            // diffuseColor.rgb += paletteColor.rgb;   // white outlines
+            diffuseColor.rgb = paletteColor.rgb - diffuseColor.rgb;  // black outlines
+          }
+        `,
+      },
+    ];
+    material.onBeforeCompile = (shader) => {
+      fragmentShaderReplacements.forEach((rep) => {
+        shader.fragmentShader = shader.fragmentShader.replace(rep.from, rep.to);
+      });
+      shader.uniforms.paletteTexture = {value: paletteTexture};
+      shader.uniforms.indexTexture = {value: indexTexture};
+      shader.uniforms.paletteTextureWidth = {value: maxNumCountries};
+    };
+    this.createMesh(geometry, material);
+  }
+
+  createPicking(geometry: THREE.BufferGeometry, indexTexture: THREE.Texture) {
+    const pickingScene = new THREE.Scene();
+    pickingScene.background = new THREE.Color(0);
+    const pickingMaterial = new THREE.MeshBasicMaterial({map: indexTexture});
+    pickingScene.add(new THREE.Mesh(geometry, pickingMaterial));
+    this.pickingScene = pickingScene;
   }
 
   initFileInfo() {
@@ -110,12 +229,12 @@ export default class Earth extends BaseObject {
       {
         name: 'men',
         hueRange: [0.7, 0.3],
-        file: this.parseData(manPopulation),
+        file: parseData(manPopulation),
       },
       {
         name: 'women',
         hueRange: [0.9, 1.1],
-        file: this.parseData(womenPopulation),
+        file: parseData(womenPopulation),
       },
     ];
     const [menInfo, womenInfo] = fileInfos;
@@ -232,8 +351,9 @@ export default class Earth extends BaseObject {
     fileInfos.forEach((info) => {
       const div = document.createElement('div');
       div.textContent = info.name;
+      div.style.cursor = 'pointer';
       uiElem?.appendChild(div);
-      div.addEventListener('mouseover', () =>
+      div.addEventListener('click', () =>
         handleMousOver(fileInfos, info, mesh)
       );
       info.elem = div;
@@ -273,47 +393,50 @@ export default class Earth extends BaseObject {
       });
   }
 
-  create() {
-    const bumpTexture = getTexture('world.jpeg');
-    const outlineTexture = getTexture('map_outline.png');
-    const outline2 = getTexture('country-outlines.png');
-    const geometry = new THREE.SphereBufferGeometry(1, 64, 32);
-    const material = new THREE.MeshPhongMaterial({
-      map: bumpTexture,
-    });
-    this.createMesh(geometry, material);
-    this.initBox();
-    this.addLabels();
-    this.setGui();
+  initEvents() {
+    const {container} = this.options;
+    container.addEventListener('pointerdown', (e: MouseEvent) =>
+      this.recordStartTimeAndPos(e)
+    );
+    container.addEventListener('pointerup', (e: MouseEvent) =>
+      this.pickCountry(e)
+    );
   }
 
-  parseData(text: string) {
-    const data: number[][] = [];
-    const settings: Record<string, any> & {data: number[][]} = {data};
-    let max: number | undefined;
-    let min: number | undefined;
-    // split into lines
-    text.split('\n').forEach((line: any) => {
-      // split the line by whitespace
-      const parts = line.trim().split(/\s+/);
-      if (parts.length === 2) {
-        // only 2 parts, must be a key/value pair
-        settings[parts[0]] = parseFloat(parts[1]);
-      } else if (parts.length > 2) {
-        // more than 2 parts, must be data
-        const values = parts.map((v: any) => {
-          const value = parseFloat(v);
-          if (value === settings.NODATA_value) {
-            return undefined;
-          }
-          max = Math.max(max === undefined ? value : max, value);
-          min = Math.min(min === undefined ? value : min, value);
-          return value;
-        });
-        data.push(values);
-      }
-    });
-    return Object.assign(settings, {min, max});
+  createPalette() {
+    const {maxNumCountries: size} = this;
+    const palette = new Uint8Array(size * 3);
+    const paletteTexture = new THREE.DataTexture(
+      palette,
+      size,
+      1,
+      THREE.RGBFormat
+    );
+    paletteTexture.minFilter = THREE.NearestFilter;
+    paletteTexture.magFilter = THREE.NearestFilter;
+    this.palette = palette;
+    this.paletteTexture = paletteTexture;
+    this.selectedColor = get255BasedColor('red');
+    this.unselectedColor = get255BasedColor('#444');
+    this.oceanColor = get255BasedColor('rgb(100,200,255)');
+    this.resetPalette();
+  }
+
+  setPaletteColor(index: number, color: number[]) {
+    const {palette} = this;
+    palette.set(color, index * 3);
+  }
+
+  resetPalette() {
+    const {unselectedColor, oceanColor, maxNumCountries, paletteTexture} = this;
+    // make all colors the unselected color
+    for (let i = 1; i < maxNumCountries; ++i) {
+      this.setPaletteColor(i, unselectedColor);
+    }
+
+    // set the ocean color (index #0)
+    this.setPaletteColor(0, oceanColor);
+    paletteTexture.needsUpdate = true;
   }
 
   addLabels() {
@@ -359,11 +482,7 @@ export default class Earth extends BaseObject {
     this.countryInfos = countryInfos as ICountryInfo[];
   }
 
-  makeBoxes(
-    file: ReturnType<Earth['parseData']>,
-    hueRange: [number, number],
-    fileInfos: IFileInfos[]
-  ) {
+  makeBoxes(file: IFile, hueRange: [number, number], fileInfos: IFileInfos[]) {
     const {min, max, data} = file;
     const range = max! - min!;
 
@@ -484,8 +603,8 @@ export default class Earth extends BaseObject {
     // get the camera's position
     camera?.getWorldPosition(cameraPosition);
     for (const countryInfo of countryInfos) {
-      const {position, elem, area} = countryInfo;
-      if (area < minShowAreaSize) {
+      const {position, elem, area, selected} = countryInfo;
+      if (!selected) {
         elem.style.display = 'none';
         // eslint-disable-next-line no-continue
         continue;
@@ -530,6 +649,80 @@ export default class Earth extends BaseObject {
       // set the zIndex for sorting
       elem.style.zIndex = `${((-tempV.z * 0.5 + 0.5) * 100000) | 0}`;
     }
+  }
+
+  getClickRelativePos(e: MouseEvent) {
+    const {container} = this.options;
+    const rect = container.getBoundingClientRect();
+    // return {
+    //   x: ((e.clientX - rect.left) * container.width) / rect.width,
+    //   y: ((e.clientY - rect.top) * container.height) / rect.height,
+    // };
+    return {
+      x: e.clientX,
+      y: e.clientY,
+    };
+  }
+
+  pickCountry(e: MouseEvent) {
+    const {
+      countryInfos,
+      pickingScene,
+      pickHelper,
+      pencil,
+      selectedColor,
+      unselectedColor,
+      paletteTexture,
+      maxClickTimeMs,
+      startTimeMs,
+      maxMoveDeltaSq,
+      startPos,
+    } = this;
+    const {camera, renderer} = pencil;
+    if (!countryInfos || !camera || !renderer) {
+      return;
+    }
+    // 当点击时间长或者鼠标点击位置移动时
+    const clickTimeMs = performance.now() - startTimeMs;
+    const position = this.getClickRelativePos(e);
+    const moveDeltaSq =
+      (startPos.x - position.x) ** 2 + (startPos.y - position.y) ** 2;
+    if (moveDeltaSq > maxMoveDeltaSq || clickTimeMs > maxClickTimeMs) {
+      return;
+    }
+    const unselectAll = () => {
+      countryInfos.forEach((info) => {
+        info.selected = false;
+      });
+      this.resetPalette();
+    };
+    const id = pickHelper.pick(position, pickingScene, camera, renderer);
+    if (id > 0) {
+      const country = countryInfos[id - 1];
+      const selected = !country.selected;
+      if (selected) {
+        unselectAll();
+      }
+      country.selected = selected;
+      this.setPaletteColor(id, selected ? selectedColor : unselectedColor);
+      paletteTexture.needsUpdate = true;
+    } else {
+      unselectAll();
+    }
+  }
+
+  maxClickTimeMs = 200;
+
+  maxMoveDeltaSq = 5 * 5;
+
+  startPos = {x: 0, y: 0};
+
+  startTimeMs = 0;
+
+  recordStartTimeAndPos(e: MouseEvent) {
+    this.startTimeMs = performance.now();
+    const pos = this.getClickRelativePos(e);
+    this.startPos = pos;
   }
 
   update() {
