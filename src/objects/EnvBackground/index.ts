@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import {EXRLoader} from 'three/examples/jsm/loaders/EXRLoader';
 import BaseObject from '@/utils/pencil/BaseObject';
-import {getImage} from '@/utils/pencil/utils';
 
 export default class EnvBackground extends BaseObject {
   uniforms: {[key: string]: THREE.IUniform};
@@ -19,7 +18,7 @@ export default class EnvBackground extends BaseObject {
     const {scene, renderer} = pencil;
     const pmremGenerator = new THREE.PMREMGenerator(renderer!);
     pmremGenerator.compileEquirectangularShader();
-    new EXRLoader().load(getImage('kloppenheim_02_4k.exr'), (texture) => {
+    new EXRLoader().load('/kloppenheim_02_4k.exr', (texture) => {
       const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
       scene!.environment = exrCubeRenderTarget.texture; // 给场景添加环境光效果
       scene!.background = exrCubeRenderTarget.texture; // 给场景添加背景图

@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build-lib": "vite build --mode lib",
+    "build": "vite build --mode site",
     "serve": "vite preview",
     "lint:js": "eslint --ext .js,.vue --fix --ignore-path .gitignore .",
     "lint:style": "stylelint **/*.{vue,css} --fix --ignore-path .gitignore",
