@@ -110,6 +110,7 @@ export default class Flyline extends BaseObject {
     // eslint-disable-next-line max-len
     const {width, height} = pencil.getSize();
     (material as any).uniforms.resolution.value.set(width, height);
+    (material as any).uniforms.visibility.value = 0;
     this.createMesh(meshLine.geometry, material as any);
 
     if (this.tween) {
@@ -123,6 +124,25 @@ export default class Flyline extends BaseObject {
       .start()
       .onComplete(onArrive);
     this.tween = tween;
+  }
+
+  animateIn() {
+    const {duration, delay, onArrive} = this.options;
+    new TWEEN.Tween(this.material.uniforms.visibility as {})
+      .to({value: 1}, 2000)
+      .start()
+      .onComplete(() => {
+        if (this.tween) {
+          TWEEN.remove(this.tween);
+        }
+        const tween = new TWEEN.Tween(this.offset)
+          .to({x: this.offset.x - 1}, duration)
+          .delay(delay)
+          .repeat(Infinity)
+          .start()
+          .onComplete(onArrive);
+        this.tween = tween;
+      });
   }
 
   destroy() {

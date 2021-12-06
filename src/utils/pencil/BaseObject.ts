@@ -91,5 +91,7 @@ export default class BaseObject {
     return this;
   }
 
+  animateIn(...args: any[]) {}
+
   public dispose() {}
 }

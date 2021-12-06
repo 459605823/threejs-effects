@@ -405,6 +405,12 @@ export default class Pencil {
       }
 
       TWEEN.update(time);
+      if (this.stats) {
+        this.stats.update();
+      }
+      if (this.control) {
+        this.control.update();
+      }
       const delta = clock.getDelta();
       this.elements.forEach((element) => {
         if (element instanceof BaseObject) {
@@ -423,17 +429,10 @@ export default class Pencil {
         } else {
           renderer.render(scene, camera);
         }
-        if (this.control) {
-          this.control.update();
-        }
       } else {
         plugin.render();
       }
       this.css3DRenderer?.render(scene, camera);
-
-      if (this.stats) {
-        this.stats.update();
-      }
     });
     this.event.emit('start');
   }

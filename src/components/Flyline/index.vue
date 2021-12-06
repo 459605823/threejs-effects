@@ -42,7 +42,7 @@ export default defineComponent({
       flyline.object3d.rotation.copy(
         new THREE.Euler((-Math.PI / 180) * 90, 0, 0)
       );
-      pencil.draw('flyMeshLine', {
+      const meshline = await pencil.draw('flyMeshLine', {
         nodes: [
           new THREE.Vector3(-50, 10, 30),
           new THREE.Vector3(0, 30, 30),
@@ -56,6 +56,7 @@ export default defineComponent({
         lightColor: 'rgba(255,255,255,1)',
         start: 0,
       });
+      meshline.animateIn();
       pencil.draw('grid', {
         size: 150,
         divisions: 50,
